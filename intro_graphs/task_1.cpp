@@ -1,110 +1,121 @@
-//task from class num. 1 6.10.2022
-/*
-Napisz program który: 
-
-1. Odczyta z klawiatury definicję grafu (ilośc wierzchołków, ilość krawędzi, krawędzie po kolei)
-
-Przykład:
-3
-2
-0 1
-1 2
-
-2. Zapisze graf w postaci listy lub macierzy sąsiedstwa lub macierzy incydencji
-3. Odpowie na pytanie czy podane prez użytkownika wierzołki a i b są ze sobą połączone (przez dowolną liczbę krawędzi)
-*/
 #include <iostream>
 #include <vector>
-
+#include <algorithm>
 using namespace std;
 
-struct node {
-    int a; 
-    int b;
-    node* next;
+class Node {
+public:
+	int a;
+	//int b;
+	Node* next;
 };
 
-node* wczytajListeKrawedzi();
-void insertAtEnd(node*& first, int too, int dystans);
-void print(node* head);
-bool czyPolaczone(node* lista, int a, int b);
+class LinkedList {
+private:
+	Node* head;
+public:
+	LinkedList() { head = nullptr; }
+
+	void insertAtEnd(int);
+	void deleteNode(int); //implement this
+	void print();
+};
+
+vector<LinkedList> wczytajListeKrawedzi();
+void printAdjacencyList(vector<LinkedList> cl);
 
 int main() {
-    node* head = nullptr;
-    
-    head = wczytajListeKrawedzi();
-    print(head);
+	/*vector<int> A = { 11, 2, 3, 4 };
+	A.push_back(10);
+	vector<Node> B;*/
+	vector<LinkedList> graf = wczytajListeKrawedzi();
+	printAdjacencyList(graf);
 
-    //testy polaczen (zwraca wartosc bool ale wyswietla odpowiedni komunikat)
-    czyPolaczone(head, 0, 1);
-    czyPolaczone(head, 1, 2);
-    czyPolaczone(head, 1, 1);
-    czyPolaczone(head, 4, 3);
-
-    return 0;
+	return 0;
 }
 
-bool czyPolaczone(node* lista, int a, int b) {
-    node* pom = lista;
+vector<LinkedList> wczytajListeKrawedzi() {
+	int wierzch, kraw;
+	cout << "Podaj liczbe wierzcholkow i krawedzi: ";
+	cin >> wierzch >> kraw;
 
-    while (pom) {
-        if (a == pom->a && b == pom->b) {
-            cout << "Polaczenie istnieje." << endl;
-            return true;
-        }
-        else if (b == pom->a && a == pom->b) {
-            cout << "Polaczenie istnieje." << endl;
-            return true;
-        }
-        else {
-            pom = pom->next;
-        }
-    }
-    cout << "Polaczenie nie istnieje" << endl;
-    return false;
+	vector<LinkedList> graph(wierzch);
+	int a, b;
+	cout << "Wczytaj a i b:" << endl;
+	for (int i = 0; i < kraw; i++) {
+		cin >> a >> b;
+		graph[a].insertAtEnd(b);
+		graph[b].insertAtEnd(a);
+	}
+	return graph;
 }
 
-node* wczytajListeKrawedzi() {
-    node* head = nullptr;
-    int wierz, kraw;
-    cout << "Wczytaj liczbe wierzcholkow: ";
-    cin >> wierz;
-    cout << "Wczytaj liczbe krawedzi: ";
-    cin >> kraw;
-
-    int a, b;
-    cout << "Wczytaj a i b: " << endl;
-    for (int i = 0; i < kraw; i++) {
-        cin >> a >> b;
-        insertAtEnd(head, a, b);
-    }
-
-    return head;
+void printAdjacencyList(vector<LinkedList> cl) {
+	for (int i = 0; i < cl.size(); i++) {
+		LinkedList ob = cl[i];
+		cout << i << ". ";
+		ob.print();
+	}
 }
 
-void print(node* head) {
-    node* p = head;
-    int counter = 1;
-    while (p != NULL) {
-        cout << counter << ". " << p->a  << " " << p->b << endl;;
-        p = p->next;
-        counter++;
-    }
+void LinkedList::insertAtEnd(int data) {
+	Node* temp = new Node;
+	temp->a = data;
+	//temp->b = b;
+	temp->next = nullptr;
+
+	if (!head) {
+		head = temp;
+		return;
+	}
+	else {
+		Node* last = head;
+		while (last->next) last = last->next;
+		last->next = temp;
+	}
 }
 
-void insertAtEnd(node*& first, int a, int b) {
-    node* temp = new node;
-    temp->a = a;
-    temp->b = b;
-    temp->next = nullptr;
+void LinkedList::print() {
+	Node* pom = head;
+	while (pom) {
+		cout << pom->a << " ";
+		pom = pom->next;
+	}
+	cout << endl;
+}
 
-    if (!first) {
-        first = temp;
+void LinkedList::deleteNode(int nodeOffset) {
+    Node* temp1 = head, * temp2 = NULL;
+    int ListLen = 0;
+
+    if (head == NULL) {
+        cout << "List empty." << endl;
         return;
     }
-    else {
-        node* last = first;
-        while (last->next) last = last->next;
-        last->next = temp;
+
+    while (temp1 != NULL) {
+        temp1 = temp1->next;
+        ListLen++;
     }
+
+    if (ListLen < nodeOffset) {
+        cout << "Index out of range"
+            << endl;
+        return;
+    }
+
+    temp1 = head;
+
+    if (nodeOffset == 1) {
+        head = head->next;
+        delete temp1;
+        return;
+    }
+
+    while (nodeOffset-- > 1) {
+        temp2 = temp1;
+        temp1 = temp1->next;
+    }
+    temp2->next = temp1->next;
+    delete temp1;
 }
