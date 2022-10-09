@@ -1,37 +1,84 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <set>
+
 using namespace std;
 
 class Node {
 public:
 	int a;
-	//int b;
 	Node* next;
 };
 
 class LinkedList {
 private:
-	Node* head;
+	int roz = 1; //rozmiar jest odpowiednio zwiekszany przy dod. elem.
 public:
+	Node* head; // niezbedne zeby miec dostep do wartosci w node
 	LinkedList() { head = nullptr; }
-
+	
 	void insertAtEnd(int);
-	void deleteNode(int); //implement this
+	void deleteNode(int);
 	void print();
+	int size();
 };
 
 vector<LinkedList> wczytajListeKrawedzi();
-void printAdjacencyList(vector<LinkedList> cl);
+void printAdjacencyList(vector<LinkedList>);
+bool czyNalezyDoGrafu(vector<LinkedList>, int, int); //iterative first depth search
 
 int main() {
-	/*vector<int> A = { 11, 2, 3, 4 };
-	A.push_back(10);
-	vector<Node> B;*/
+	//inicjalizacja listy sasiedztwa
+	/*
+	Dla danych z zajec wyglada tak:
+	wierzcholek sasiedztwo
+	0.			1
+	1.			2
+	2.			1
+	(gdzie sąsiedztwo to lista powiązana)
+	*/
 	vector<LinkedList> graf = wczytajListeKrawedzi();
+	cout << graf[1].size() << endl;
 	printAdjacencyList(graf);
+	
+	cout << endl << endl;
 
+	//testy dla danych z zajęć		output:
+	czyNalezyDoGrafu(graf, 0, 1); //nalezy
+	czyNalezyDoGrafu(graf, 1, 2); //nalezy
+	czyNalezyDoGrafu(graf, 0, 2); //nalezy
+	czyNalezyDoGrafu(graf, 2, 3); //nie nalezy
 	return 0;
+}
+
+bool czyNalezyDoGrafu(vector<LinkedList> graph, int a, int b) {
+	set<int> visited;
+	vector<int> stack;
+	stack.push_back(a);
+
+	int node;
+	while (stack.size() != 0) {
+		node = stack[stack.size() - 1];
+		stack.pop_back();
+
+		if (node == b) {
+			cout << "nalezy" << endl;
+			return true;
+		}
+
+		if (!(visited.find(node) != visited.end())) {
+			visited.insert(node);
+			LinkedList l = graph[node];
+			for (int i = 0; i < l.size(); i++) {
+				stack.push_back(l.head->a);
+				l.head = l.head->next;
+			}
+		}
+	}
+
+	cout << "nie nalezy" << endl;
+	return false;
 }
 
 vector<LinkedList> wczytajListeKrawedzi() {
@@ -51,6 +98,7 @@ vector<LinkedList> wczytajListeKrawedzi() {
 }
 
 void printAdjacencyList(vector<LinkedList> cl) {
+	cout << endl;
 	for (int i = 0; i < cl.size(); i++) {
 		LinkedList ob = cl[i];
 		cout << i << ". ";
@@ -61,7 +109,6 @@ void printAdjacencyList(vector<LinkedList> cl) {
 void LinkedList::insertAtEnd(int data) {
 	Node* temp = new Node;
 	temp->a = data;
-	//temp->b = b;
 	temp->next = nullptr;
 
 	if (!head) {
@@ -73,6 +120,11 @@ void LinkedList::insertAtEnd(int data) {
 		while (last->next) last = last->next;
 		last->next = temp;
 	}
+	++roz;
+}
+
+int LinkedList::size() {
+	return roz;
 }
 
 void LinkedList::print() {
