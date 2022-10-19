@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 def wczytajListeSasiedztwa() -> Dict[int, list[int]]:
     wierz = int(input("Wczytaj wierzcholki: "))
     kraw =  int(input("Wczytaj liczbe krawedzi: "))

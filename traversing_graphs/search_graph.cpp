@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <set>
+#include <stack>
 
 using namespace std;
 
@@ -26,68 +27,69 @@ public:
 
 class Graph {
 
+    int V = 0;
     vector<LinkedList> adjacencyList;
 
 public:
-    void addNode();
-    void printAdjacencyList();
-};
+    Graph() = default;
 
-vector<LinkedList> wczytajListeKrawedzi();
-void printAdjacencyList(vector<LinkedList>);
-set<int> czyNalezyDoGrafu(vector<LinkedList>, int, int); //iterative first depth search
+    void addNode(int u, int v, bool bidir) {
+        adjacencyList[u].insertAtEnd(v);
+        V++;
+        if (bidir == true) {
+            adjacencyList[v].insertAtEnd(u);
+        }
+    }
 
-int main() {
-	//inicjalizacja listy sasiedztwa
-	/*
-	Dla danych z zajec wyglada tak:
-	wierzcholek sasiedztwo
-	0.			1
-	1.			2
-	2.			1
-	(gdzie sąsiedztwo to lista powiązana)
-	*/
-	vector<LinkedList> graf = wczytajListeKrawedzi();
-	cout << graf[1].size() << endl;
-	printAdjacencyList(graf);
-	
-	cout << endl << endl;
-
-	//testy dla danych z zajęć		output:
-	czyNalezyDoGrafu(graf, 0, 1); //nalezy
-	czyNalezyDoGrafu(graf, 1, 2); //nalezy
-	czyNalezyDoGrafu(graf, 0, 2); //nalezy
-	czyNalezyDoGrafu(graf, 2, 3); //nie nalezy
-	return 0;
-}
-
-set<int> czyNalezyDoGrafu(vector<LinkedList> graph, int a, int b) {
-	set<int> visited;
-	vector<int> stack;
-	stack.push_back(a);
-
-	int node;
-	while (stack.size() != 0) {
-		node = stack[stack.size() - 1];
-		stack.pop_back();
-
-		if (node == b) {
-			cout << "nalezy" << endl;
-			return visited;
+    void printAdjacencyList() {
+        cout << endl;
+        for (int i = 0; i < adjacencyList.size(); i++) {
+            LinkedList ob = adjacencyList[i];
+            cout << i << ". ";
+            ob.print();
 		}
+	}
+    void dfs(int start) {
+		set<int> visited;
+		stack<int> Stack;
+		Stack.push(start);
+		while (!Stack.empty()) {
+			int s = Stack.top();
+			Stack.pop();
+			if (visited.find(s) == visited.end()) {
+				cout << s << " ";
+				visited.insert(s);
+			}
 
-		if (!(visited.find(node) != visited.end())) {
-			visited.insert(node);
-			LinkedList l = graph[node];
+			LinkedList l = adjacencyList[s];
+
 			for (int i = 0; i < l.size(); i++) {
-				stack.push_back(l.head->a);
+				Stack.push(l.head->a);
 				l.head = l.head->next;
 			}
 		}
 	}
+};
 
-	cout << "nie nalezy" << endl;
-	return visited;
+// vector<LinkedList> wczytajListeKrawedzi();
+// void printAdjacencyList(vector<LinkedList>);
+ //iterative depth first search
+
+int main() {
+	Graph grafik;
+	grafik.addNode(0, 1, false);
+	grafik.addNode(1, 2,false);
+	grafik.addNode(1, 3,false);
+	grafik.addNode(2, 4,false);
+	grafik.addNode(2,5,false);
+	grafik.addNode(3,6,false);
+	grafik.addNode(3,7,false);
+	grafik.printAdjacencyList();
+	
+
+	
+	
+	return 0;
 }
 
 vector<LinkedList> wczytajListeKrawedzi() {
