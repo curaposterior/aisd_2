@@ -4,7 +4,7 @@ Code from classes
 Revision of graphs (DONE):
 - find if path from a to b exists (undirected graph)
 
-Traversing graphs (TODO):
+Traversing graphs (DONE for python, TODO for cpp):
 - Breadth first search (directed graph)
 - Depth first search (directed graph)
 

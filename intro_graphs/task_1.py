@@ -1,4 +1,4 @@
-def wczytajListeSasiedztwa() -> Dict[int, list[int]]:
+def wczytajListeSasiedztwa() -> dict[int, list[int]]:
     wierz = int(input("Wczytaj wierzcholki: "))
     kraw =  int(input("Wczytaj liczbe krawedzi: "))
     graph = {key: [] for key in range(wierz)}
