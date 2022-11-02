@@ -26,20 +26,24 @@ class Graph:
 
         for s, d, w in self.edgeList:
             if (dist[s] != float("inf") and dist[s] + w < dist[d]):
-                raise Exception("Negative cycle detected")
+                print("Negative cycle detected")
+                return -1
         
         return {i: dist[i] for i in range(len(dist))}
 
 
 if __name__ == '__main__':
-    g = Graph(6)
-    g.addEdge(0,1,2)
-    g.addEdge(0,2,4)
-    g.addEdge(1,2,1)
-    g.addEdge(1,3,7)
-    g.addEdge(2,4,3)
-    g.addEdge(3,5,1)
-    g.addEdge(4,3,2)
-    g.addEdge(4,5,5)
+    g = Graph(5)
+    g.addEdge(0, 1, -1)
+    g.addEdge(0, 2, 4)
+    g.addEdge(1, 2, 3)
+    g.addEdge(1, 3, 2)
+    g.addEdge(1, 4, -20)
+    g.addEdge(3, 2, 5)
+    g.addEdge(3, 1, 1)
+    g.addEdge(4, 3, -3)
+ 
+    # function call
+    # g.BellmanFord(0)
     shrt = g.bellman_ford(0)
     print(shrt)
