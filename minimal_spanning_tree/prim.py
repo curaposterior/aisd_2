@@ -1,33 +1,32 @@
-from queue import Queue
-from collections import defaultdict
 import math
+from heapq import heappush, heappop
+
 
 class Graph:
 
     def __init__(self, V: int):
-        self.l_wierzch = V
-        self.adjList = {key: [] for key in range(self.l_wierzch)}
-        self.matrix = None
-        self.edgeList = None
+        self.V = V
+        self.adjList = {key: [] for key in range(self.V)} #lista sasiedztwa, slownik - {skad: }
+        self.matrix = None #macierz sasiedztwa
+        self.edgeList = None #slownik {(skad, dokad): waga}
 
     def addNode(self, u, v, w): #skad, dokad, waga
         self.adjList[u].append((v, w))
 
     def readMatrix(self, filename: str) -> list[list[int]]:
-        # matrix = []
         with open(filename, 'r') as f:
             data = f.read().split()
         
-        matrix = [[0] * self.l_wierzch for _ in range(self.l_wierzch)]
+        matrix = [[0] * self.V for _ in range(self.V)]
 
-        for i in range(self.l_wierzch*self.l_wierzch):
-            matrix[i // self.l_wierzch][i%self.l_wierzch] = int(data[i])
+        for i in range(self.V*self.V):
+            matrix[i // self.V][i%self.V] = int(data[i])
         
         self.matrix = matrix
 
     def convertMatrixToAdjList(self):
-        for i in range(self.l_wierzch):
-            for j in range(self.l_wierzch):
+        for i in range(self.V):
+            for j in range(self.V):
                 if (self.matrix[i][j] != 0):
                     self.adjList[i].append((j, self.matrix[i][j]))
 
@@ -60,7 +59,7 @@ class Graph:
         processed = set()
         mst = [] #minimal spanning tree
         cost = 0
-        from heapq import heappush, heappop
+        
         q = []
         min_cost = math.inf 
         i_s, i_d = 0, 0 
@@ -68,9 +67,10 @@ class Graph:
             if min_cost > w:
                 min_cost = w
                 i_s, i_d = s, d
+
         heappush(q, (min_cost, i_s, i_d))
-        while len(mst) < self.V-1 and q:
-            print(q)
+
+        while len(mst) < self.V-1 and q: #dopoki nie dodamy wszystkich V
             w, s, d = heappop(q)
             if (visited[s] + visited[d]) < 2:
                 visited[d] = 1
@@ -85,7 +85,7 @@ class Graph:
                             heappush(q, (w, edge[0], edge[1]))
                             processed.add((edge[0], edge[1]))
             
-        return mst, cost
+        return mst, cost #krotka (list[list[int]], int)
 
 
 if __name__ == '__main__':
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     grafik.readMatrix('graf.txt')
     print(grafik.matrix)
     grafik.convertMatrixToAdjList()
-    grafik.printGraph()
+    grafik.printAdjList()
     grafik.convertAdjListToEdgeList()
     print(grafik.edgeList)
     mst = grafik.prims_algo_edgelist()

@@ -133,3 +133,5 @@ dmypy.json
 .vscode/
 tempCodeRunnerFile.py
 test_prim.py
+todo.txt
+notebook.ipynb

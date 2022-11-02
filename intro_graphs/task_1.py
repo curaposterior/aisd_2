@@ -35,5 +35,5 @@ def dfs(graph: dict[int, list[int]], x: int, target: int) -> bool:
 if __name__ == '__main__':
     graph = wczytajListeSasiedztwa()
     wypiszGraf(graph)
-
+    
     print("It works...")
