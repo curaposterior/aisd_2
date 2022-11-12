@@ -2,9 +2,6 @@
 from collections import defaultdict
 import heapq
 
-#https://github.com/TheAlgorithms/Python/blob/master/graphs/dijkstra_algorithm.py
-
-
 class Graph:
     def __init__(self, V: int):
         self.V = V
