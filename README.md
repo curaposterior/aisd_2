@@ -8,10 +8,10 @@ Traversing graphs (DONE for python, TODO for cpp):
 - Breadth first search (directed graph)
 - Depth first search (directed graph)
 
-Finding path algorithms (TODO):
+Finding path algorithms (DONE for python, TODO for cpp):
 - Prim
 - Kruskal
 
-Shortest path problem (TODO):
+Shortest path problem (DONE for python, TODO for cpp):
 - Dijkstra
 - Bellman-ford
