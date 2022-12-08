@@ -32,3 +32,8 @@ class BST:
             return self.search(self.root.right, key)
         
         return self.search(self.left, key)
+
+
+if __name__ == '__main__':
+    rt = BST(10, None, None)
+    rt.addNode()
