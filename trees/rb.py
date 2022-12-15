@@ -535,4 +535,9 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-    tree = RedBlackTree()
+    tree = RedBlackTree(5)
+    tree.insert(1)
+    tree.insert(2)
+    tree.insert(22)
+    tree.insert(-10)
+    print(tree)
