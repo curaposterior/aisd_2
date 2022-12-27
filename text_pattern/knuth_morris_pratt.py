@@ -42,6 +42,7 @@ def kmp_search(s: str, w: str) -> int:
 
 
 if __name__ == "__main__":
-
+    print(kmp_table('siema'))
+    print(kmp_table('aaaa'))
     assert kmp_search("simeaneiu adfa fdsfs", "ean") == 3 #should return 3
     print(kmp_search("simeaneiu adfa fdsfs", "ean"))
